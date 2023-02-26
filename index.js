@@ -121,6 +121,57 @@ function promptIntern() {
                 type: "input",
                 name: "name",
                 message: "What is the intern's name?",
-            }]}
+            },
+            {
+                type: "input",
+                name: "id",
+                message: "What is the intern's employee ID?",
+            },
+            {
+                type: "input",
+                name: "email",
+                message: "What is the intern's email address?",
+            },
+            {
+                type: "input",
+                name: "school",
+                message: "What school does the intern attend?",
+            },
+            {
+                type: "list",
+                name: "addMember",
+                message: "Would you like to add another team member?",
+                choices: ["Engineer", "Intern", "Finish building team"],
+            },
+        ])
+        .then((answers) => {
+            // Create a new Intern object and add it to the teamMembers array
+            const intern = new Intern(
+                answers.name,
+                answers.id,
+                answers.email,
+                answers.school
+            );
+            teamMembers.push(intern);
+
+            // Determine what type of team member to add next based on user's choice
+            if (answers.addMember === "Engineer") {
+                promptEngineer();
+            } else if (answers.addMember === "Intern") {
+                promptIntern();
+            } else {
+                // Call function to render HTML and write to file
+                const html = render(teamMembers);
+                fs.writeFile(outputPath, html, (err) => {
+                    if (err) throw err;
+                    console.log("Team profile generated!");
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 
 
